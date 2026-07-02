@@ -16,7 +16,7 @@ export function queryMockBackend(raw: string): MockResponse {
 
   if (/(hire|available|open to|job|role|interview)/.test(q)) {
     return {
-      endpoint: 'POST /api/v1/recruiter/ping',
+      endpoint: 'POST /api/v1/availability/ping',
       latencyMs,
       body: {
         status: 'AVAILABLE',
@@ -25,6 +25,70 @@ export function queryMockBackend(raw: string): MockResponse {
         strengths: ['RAG systems', 'high-throughput pipelines', 'query optimization'],
         response_sla: 'usually < 24h',
         next_step: 'email gangaramaninikhil@gmail.com',
+      },
+    };
+  }
+
+  if (/(mi buddy|mi_buddy|how does|rag|retrieval)/.test(q)) {
+    return {
+      endpoint: 'GET /api/v1/systems/mi_buddy',
+      latencyMs,
+      body: {
+        system: 'MI Buddy',
+        purpose: 'natural-language answers over SEC 13F institutional filings',
+        pipeline: [
+          '1. parse filing XML into structured infoTables',
+          '2. chunk along structural boundaries',
+          '3. embed chunks → pgvector (768d)',
+          '4. retrieve@k=8 + rerank on query',
+          '5. generate answer with citations, streamed',
+        ],
+        stack: ['Python', 'pgvector', 'FastAPI', 'LLM APIs'],
+        see_also: './projects → 3.1 ./mi_buddy (live simulation above)',
+      },
+    };
+  }
+
+  if (/(built|project|portfolio|work on|show me what)/.test(q)) {
+    return {
+      endpoint: 'GET /api/v1/projects',
+      latencyMs,
+      body: {
+        count: 3,
+        projects: [
+          { name: 'MI Buddy', desc: 'RAG system over SEC 13F filings', sim: 'live in ./projects' },
+          { name: 'High-Throughput Routing', desc: '40–100M data points/day ingestion + routing' },
+          { name: 'This Terminal', desc: 'the scroll-driven WebGL portfolio you are inside' },
+        ],
+        highlight: '+75% query performance increase on Simfund (MarketPulse)',
+      },
+    };
+  }
+
+  if (/(stack|tech|language|skill|tools|framework)/.test(q)) {
+    return {
+      endpoint: 'GET /api/v1/stack',
+      latencyMs,
+      body: {
+        languages: ['Golang', 'Python', 'Java', 'TypeScript', 'SQL'],
+        ai_retrieval: ['RAG architecture', 'embeddings', 'pgvector/FAISS', 'LLM orchestration'],
+        data_infra: ['Kafka', 'PostgreSQL', 'Redis', 'Docker/K8s', 'AWS'],
+        pattern: 'take a system that moves data, make it faster, make it explain itself',
+      },
+    };
+  }
+
+  if (/(latency|performance|slow|optimi[sz]e|query)/.test(q)) {
+    return {
+      endpoint: 'POST /api/v1/perf/explain',
+      latencyMs,
+      body: {
+        query: raw,
+        before_ms: 1840,
+        after_ms: 460,
+        delta: '+75% faster',
+        applied: ['covering index', 'denormalized read model', 'aggregate pushdown'],
+        platform: 'Simfund (MarketPulse)',
       },
     };
   }
@@ -44,21 +108,6 @@ export function queryMockBackend(raw: string): MockResponse {
           'Institutional managers increased the position by 4.2% QoQ; sole discretion filings dominate.',
         citations: 2,
         confidence: 0.88,
-      },
-    };
-  }
-
-  if (/(latency|performance|slow|optimi[sz]e|query)/.test(q)) {
-    return {
-      endpoint: 'POST /api/v1/perf/explain',
-      latencyMs,
-      body: {
-        query: raw,
-        before_ms: 1840,
-        after_ms: 460,
-        delta: '+75% faster',
-        applied: ['covering index', 'denormalized read model', 'aggregate pushdown'],
-        platform: 'Simfund (MarketPulse)',
       },
     };
   }

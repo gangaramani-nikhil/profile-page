@@ -6,7 +6,7 @@ import { profile } from '../../data/profile';
 const FACTS: [string, string][] = [
   ['user', profile.name.toLowerCase().replace(' ', '.')],
   ['role', profile.role],
-  ['loc', `${profile.location} (${profile.timezone})`],
+  ['loc', profile.location],
   ['focus', 'RAG · data pipelines · query performance'],
   ['status', 'open to hard problems'],
 ];

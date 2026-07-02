@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion } from 'motion/react';
 import { Section } from '../ui/Section';
-import { GhostLink } from '../ui/GhostLink';
 import { SimCanvas } from '../three/SimCanvas';
 import { MiBuddySim } from '../three/MiBuddySim';
 import { RoutingSim } from '../three/RoutingSim';
@@ -113,12 +112,6 @@ function ProjectCard({ project, i }: { project: Project; i: number }) {
             <span key={s} className="border border-grid px-2 py-0.5 text-[10px] text-dim">
               {s}
             </span>
-          ))}
-        </div>
-
-        <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-grid pt-3">
-          {project.links.map((l) => (
-            <GhostLink key={l.label} link={l} />
           ))}
         </div>
       </div>
