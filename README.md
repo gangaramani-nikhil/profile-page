@@ -3,7 +3,7 @@
 Single-page "Neon Terminal / Hacker OS" portfolio for **Nikhil Gangaramani**
 (AI Engineer, Mumbai IN). A scroll-driven WebGL data pipeline is the site's
 connective tissue: raw text nodes chunk and convert into glowing vector
-embeddings as recruiters scroll from `./init` to `./contact`.
+embeddings as visitors scroll from `./init` to `./contact`.
 
 **Stack:** Vite · React 18 · TypeScript · Tailwind CSS 3 · `motion` v12 ·
 Three.js + React Three Fiber · raw WebGL · `cmdk` · `sonner`
@@ -55,7 +55,7 @@ npm run preview    # serve the production build
   core and fan out to color-coded sinks, with a live "routed today" odometer
   ticking at the real 40–100M points/day rate (~460–1,150 events/sec).
 
-### 4. `04. ./log` — recruiter-optimized metrics
+### 4. `04. ./log` — metrics-first experience timeline
 - The ISS entry leads with a terminal-green counter that rips from `0%` to
   `+75%` the moment it enters the viewport — the Simfund (MarketPulse) query
   performance win is the first thing read.
@@ -68,9 +68,9 @@ npm run preview    # serve the production build
   `> start mi_buddy`, `> optimize_queries`, `> router_core --stress`,
   `> inject --ripple`, `sudo hire-me` — each plays a toast sequence and
   drives the page (scroll, ripple) like a real shell.
-- `fetch cv --view` renders the LaTeX CV in a `less`-style pager;
-  `fetch cv --download` pulls the `.tex` source
-  (`public/cv/nikhil_gangaramani_cv.tex`).
+- CV is one click from the hero and nav (`↓ download cv.pdf`); the palette adds
+  `fetch cv --pdf`, `fetch cv --view` (LaTeX pager), and `fetch cv --download`
+  (`.tex` source). Both files live in `public/cv/`.
 - The contact section hosts a functional terminal: type a natural-language
   query, it pings the mocked MI Buddy backend (`mockBackend.ts`) and streams
   the JSON response token-by-token with status line + latency.

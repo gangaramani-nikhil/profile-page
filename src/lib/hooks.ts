@@ -77,6 +77,39 @@ export function useInViewOnce<T extends Element>(
   return [ref, seen];
 }
 
+/**
+ * Scrollspy: returns the id of the section currently crossing the upper-middle
+ * band of the viewport, so the nav can highlight where the reader is.
+ */
+export function useActiveSection(ids: readonly string[]): string {
+  const [active, setActive] = useState(ids[0] ?? '');
+  useEffect(() => {
+    const visible = new Map<string, number>();
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) visible.set(e.target.id, e.intersectionRatio);
+          else visible.delete(e.target.id);
+        }
+        // Highest section in document order that is inside the band wins.
+        for (const id of ids) {
+          if (visible.has(id)) {
+            setActive(id);
+            return;
+          }
+        }
+      },
+      { rootMargin: '-35% 0px -60% 0px', threshold: [0, 0.01, 0.5] },
+    );
+    const els = ids
+      .map((id) => document.getElementById(id))
+      .filter((el): el is HTMLElement => el !== null);
+    els.forEach((el) => io.observe(el));
+    return () => io.disconnect();
+  }, [ids]);
+  return active;
+}
+
 /** Document scroll progress 0..1, updated outside React render. */
 export function useDocScrollProgress(): React.MutableRefObject<number> {
   const progress = useRef(0);

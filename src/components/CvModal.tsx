@@ -50,11 +50,18 @@ export function CvModal({ open, onClose }: { open: boolean; onClose: () => void 
               less {profile.cv.fileName}
               <span className="ml-auto flex items-center gap-3 normal-case">
                 <a
+                  href={profile.cv.pdfPath}
+                  download={profile.cv.pdfFileName}
+                  className="border border-amber/50 bg-amber/10 px-2 py-1 text-[10px] text-amber hover:bg-amber/20"
+                >
+                  ↓ pdf
+                </a>
+                <a
                   href={profile.cv.path}
                   download={profile.cv.fileName}
                   className="border border-neon/50 bg-neon/10 px-2 py-1 text-[10px] text-neon hover:bg-neon/20"
                 >
-                  ↓ download .tex
+                  ↓ .tex
                 </a>
                 <button onClick={onClose} className="text-dim hover:text-danger" aria-label="Close CV viewer">
                   [q]

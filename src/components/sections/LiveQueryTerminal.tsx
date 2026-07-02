@@ -14,8 +14,11 @@ interface Block {
   text: string;
 }
 
-const PROMPT = 'recruiter@guest:~$';
+const PROMPT = 'guest@mi_buddy:~$';
 const SUGGESTIONS = [
+  'what has he built?',
+  'how does MI Buddy work?',
+  'what is his tech stack?',
   'show MSFT 13F holdings',
   'why is the fund screen slow?',
   'is he available for hire?',

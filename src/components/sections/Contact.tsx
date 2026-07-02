@@ -50,7 +50,7 @@ export function Contact() {
             </div>
             <div className="flex items-center gap-3">
               <span className="w-20 shrink-0 text-xs text-dim">base</span>
-              <span className="text-fg/85">{profile.location} · {profile.timezone}</span>
+              <span className="text-fg/85">{profile.location} (IST)</span>
             </div>
           </div>
 

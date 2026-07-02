@@ -5,7 +5,7 @@ import { NeuralCanvas } from './NeuralCanvas';
 import { profile } from '../../data/profile';
 import { useIsMobile, usePrefersReducedMotion } from '../../lib/hooks';
 
-const TYPED_LINE = 'exec ./portfolio --mode=recruiter --gpu=on';
+const TYPED_LINE = 'exec ./portfolio --mode=interactive --gpu=on';
 
 function TypedCommand() {
   const reduced = usePrefersReducedMotion();
@@ -50,7 +50,7 @@ export function Hero() {
             <span className="h-2 w-2 rounded-full bg-neon shadow-neon-sm" />
             <span>session: interactive</span>
             <span className="text-grid">|</span>
-            <span>{profile.location} · {profile.timezone}</span>
+            <span>{profile.location}</span>
           </div>
 
           <TypedCommand />
@@ -68,8 +68,15 @@ export function Hero() {
 
           <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3 text-xs">
             <a
-              href="#projects"
+              href={profile.cv.pdfPath}
+              download={profile.cv.pdfFileName}
               className="border border-neon/50 bg-neon/10 px-4 py-2 text-neon shadow-neon-sm transition-all hover:bg-neon/20 hover:shadow-neon"
+            >
+              ↓ download cv.pdf
+            </a>
+            <a
+              href="#projects"
+              className="border border-grid px-4 py-2 text-fg transition-colors hover:border-neon/60 hover:text-neon"
             >
               cat ./projects
             </a>

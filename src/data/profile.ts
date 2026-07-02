@@ -24,7 +24,6 @@ export interface Project {
   stack: string[];
   metrics: { label: string; value: string }[];
   sim: 'rag' | 'routing' | 'none';
-  links: ProfileLink[];
 }
 
 export interface LogEntry {
@@ -63,6 +62,8 @@ export const profile = {
   cv: {
     fileName: 'nikhil_gangaramani_cv.tex',
     path: '/cv/nikhil_gangaramani_cv.tex',
+    pdfFileName: 'nikhil_gangaramani_cv.pdf',
+    pdfPath: '/cv/nikhil_gangaramani_cv.pdf',
   },
 };
 
@@ -116,10 +117,6 @@ export const projects: Project[] = [
       { label: 'answers', value: 'streamed + cited' },
     ],
     sim: 'rag',
-    links: [
-      { label: 'source', href: 'https://github.com/gangaramani-nikhil', offlineToken: '[WIP]' },
-      { label: 'live demo', href: null, offlineToken: '[STATUS: OFFLINE]' },
-    ],
   },
   {
     id: 'routing',
@@ -138,10 +135,6 @@ export const projects: Project[] = [
       { label: 'delivery', value: 'at-least-once, idempotent sinks' },
     ],
     sim: 'routing',
-    links: [
-      { label: 'source', href: null, offlineToken: '[STATUS: OFFLINE]' },
-      { label: 'writeup', href: null, offlineToken: '[WIP]' },
-    ],
   },
   {
     id: 'this-site',
@@ -158,9 +151,6 @@ export const projects: Project[] = [
       { label: 'frameloop', value: 'demand — renders only on scroll' },
     ],
     sim: 'none',
-    links: [
-      { label: 'source', href: 'https://github.com/gangaramani-nikhil/profile-page' },
-    ],
   },
 ];
 

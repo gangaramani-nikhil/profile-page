@@ -110,7 +110,7 @@ export function CommandPalette({ open, setOpen, onViewCv }: PaletteProps) {
     runProcess(
       [
         { text: '> sudo hire-me' },
-        { text: '[sudo] password for recruiter: ********' },
+        { text: '[sudo] password for guest: ********' },
         { text: 'permission granted — drafting offer.eml' },
       ],
       `channel open: ${profile.email}`,
@@ -145,6 +145,20 @@ export function CommandPalette({ open, setOpen, onViewCv }: PaletteProps) {
         </Command.Group>
 
         <Command.Group heading="cv">
+          <Command.Item
+            onSelect={() => {
+              close();
+              const a = document.createElement('a');
+              a.href = profile.cv.pdfPath;
+              a.download = profile.cv.pdfFileName;
+              a.click();
+              toast.success('downloading CV', { description: profile.cv.pdfFileName });
+            }}
+            keywords={['resume', 'pdf', 'download']}
+          >
+            <span className="text-amber">$</span> fetch cv --pdf
+            <span className="cmd-hint">print-ready</span>
+          </Command.Item>
           <Command.Item
             onSelect={() => {
               close();

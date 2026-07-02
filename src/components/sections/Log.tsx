@@ -14,7 +14,7 @@ const ART = {
 /**
  * Terminal counter that rips from 0 to the target the moment the entry
  * enters the viewport — the +75% Simfund (MarketPulse) number leads the
- * section so it's the first thing a recruiter reads.
+ * section so it's the first thing a reader sees.
  */
 function MetricCounter({ counter }: { counter: NonNullable<LogEntry['counter']> }) {
   const [ref, seen] = useInViewOnce<HTMLDivElement>(0.5);
