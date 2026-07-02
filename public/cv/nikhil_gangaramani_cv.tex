@@ -1,0 +1,86 @@
+% =====================================================================
+%  Nikhil Gangaramani — AI Engineer — Curriculum Vitae
+%  Compile: pdflatex nikhil_gangaramani_cv.tex
+%  This file is also served verbatim by the portfolio's ⌘K palette
+%  ("fetch cv"). Content mirrors src/data/profile.ts.
+% =====================================================================
+\documentclass[10pt,a4paper]{article}
+
+\usepackage[margin=1.6cm]{geometry}
+\usepackage[hidelinks]{hyperref}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{parskip}
+
+\titleformat{\section}{\large\bfseries\scshape}{}{0em}{}[\titlerule]
+\titlespacing*{\section}{0pt}{10pt}{6pt}
+\setlist[itemize]{leftmargin=1.2em, itemsep=1pt, topsep=2pt}
+\pagestyle{empty}
+
+\begin{document}
+
+% ---------------------------------------------------------------------
+\begin{center}
+  {\LARGE\bfseries Nikhil Gangaramani}\\[2pt]
+  AI Engineer --- RAG Systems \& High-Throughput Data Pipelines\\[2pt]
+  Mumbai, IN \; | \;
+  \href{mailto:gangaramaninikhil@gmail.com}{gangaramaninikhil@gmail.com} \; | \;
+  \href{https://github.com/gangaramani-nikhil}{github.com/gangaramani-nikhil}
+\end{center}
+
+% ---------------------------------------------------------------------
+\section{Summary}
+AI engineer focused on production-grade retrieval systems and the data
+infrastructure underneath them: RAG pipelines over SEC filings,
+ingestion/routing layers moving 40--100M data points per day, and query
+layers rebuilt for speed (+75\% on Simfund/MarketPulse). Comfortable owning
+systems end-to-end --- from chunking strategy and vector-index hygiene to
+Kafka partitioning and PostgreSQL query plans.
+
+% ---------------------------------------------------------------------
+\section{Experience}
+\textbf{Institutional Shareholder Services (ISS)} \hfill 2023 --- Present\\
+\textit{Software Engineer --- Data \& AI \hfill Simfund (MarketPulse)}
+\begin{itemize}
+  \item Rebuilt the hot query path on the Simfund (MarketPulse)
+        fund-analytics platform --- covering indexes, denormalized read
+        models, and aggregate pushdown --- for a \textbf{+75\% query
+        performance increase}.
+  \item Built Golang ingestion services handling tens of millions of market
+        data points daily with strict ordering and idempotency guarantees.
+  \item Shipped RAG tooling over SEC filings so analysts query institutional
+        holdings in natural language instead of SQL.
+\end{itemize}
+
+\textbf{Backend Platform Work} \hfill 2022 --- 2023\\
+\textit{Software Engineer \hfill JVM Services}
+\begin{itemize}
+  \item Owned latency-sensitive Java services; profiled allocation pressure
+        and tuned generational GC to cut p99 pauses.
+  \item Introduced structured concurrency and load-shedding so services
+        degrade predictably under burst load.
+\end{itemize}
+
+% ---------------------------------------------------------------------
+\section{Projects}
+\textbf{MI Buddy} --- RAG over SEC 13F institutional filings
+\begin{itemize}
+  \item Parse $\rightarrow$ chunk $\rightarrow$ embed $\rightarrow$
+        retrieve/rerank pipeline; streamed answers with citations back into
+        the source filing. (Python, pgvector, FastAPI, LLM APIs)
+\end{itemize}
+\textbf{High-Throughput Routing} --- 40--100M data points/day
+\begin{itemize}
+  \item Golang worker pools fanning Kafka partitions through a rules-based
+        router; backpressure + dead-letter handling; at-least-once delivery
+        into idempotent sinks.
+\end{itemize}
+
+% ---------------------------------------------------------------------
+\section{Skills}
+\textbf{Languages:} Golang, Python, Java, TypeScript, SQL\\
+\textbf{AI/Retrieval:} RAG architecture, embeddings, pgvector/FAISS,
+LLM orchestration \& evals\\
+\textbf{Data/Infra:} Kafka, PostgreSQL, Redis, Docker/Kubernetes, AWS
+
+\end{document}
