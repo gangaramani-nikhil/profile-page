@@ -1,105 +1,71 @@
-# nikhil@mumbai:~$ — AI Engineer Portfolio
+# Nikhil Gangaramani — Portfolio
 
-Single-page "Neon Terminal / Hacker OS" portfolio for **Nikhil Gangaramani**
-(AI Engineer, Mumbai IN). A scroll-driven WebGL data pipeline is the site's
-connective tissue: raw text nodes chunk and convert into glowing vector
-embeddings as visitors scroll from `./init` to `./contact`.
+Positioning: **AI engineering for financial markets** — a finance-native
+engineer building GenAI systems for investment workflows. Institutional,
+data-forward design (a research note, not a landing page).
 
-**Stack:** Vite · React 18 · TypeScript · Tailwind CSS 3 · `motion` v12 ·
-Three.js + React Three Fiber · raw WebGL · `cmdk` · `sonner`
+Built with **Astro** (static, zero-JS by default except the ⌘K index).
 
 ```bash
 npm install
-npm run dev        # local dev server
-npm run build      # typecheck + production bundle
-npm run preview    # serve the production build
+npm run dev       # http://localhost:4321
+npm run build     # static output to dist/
+npm run preview   # serve the build
+npm run check     # astro type check
 ```
 
----
-
-## Implementation plan → what shipped
-
-### 1. Performance & WebGL architecture
-- **GPU instancing** — every heavy particle system is one draw call:
-  - Global pipeline: 1,500 particles (520 on mobile) on a single
-    `InstancedBufferGeometry` with per-instance `aStart/aChunk/aEmbed/aSeed`
-    attributes; the raw-text → chunk → embedding morph runs entirely in the
-    vertex shader (`src/components/three/pipelineShaders.ts`).
-  - Routing sim: 2,600 particles whose bezier lane motion is computed
-    per-vertex on the GPU (`RoutingSim.tsx`) — CPU only updates `uTime`.
-- **Scroll-gated on-demand rendering** — every R3F canvas uses
-  `frameloop="demand"`. The global canvas invalidates only while scroll is
-  settling or a ripple is decaying; project-card canvases unmount entirely
-  when their DOM rect leaves the viewport (IntersectionObserver in
-  `SimCanvas.tsx`) and pause when the tab is hidden.
-- **KTX2 asset policy** — all scenes are procedural (zero texture fetches);
-  `src/lib/ktx2.ts` is the single factory any future texture/model must go
-  through so GPU-native Basis/KTX2 transcoding is enforced from day one.
-
-### 2. Scroll-driven 3D data pipeline
-- `PipelineCanvas.tsx` is a fixed full-viewport canvas behind the page. Scroll
-  progress flies the camera ~62 units down a ringed tunnel; floating terminal
-  tokens (real text via cached `CanvasTexture`s, no font fetches) fade out as
-  particles cascade from green raw-text motes → amber chunks → cyan embedding
-  constellations.
-- **Dynamic shaders**: `uNoiseAmp` modulates ambient displacement; hovering or
-  clicking a project card emits a screen-space ripple through `rippleBus.ts`
-  that splashes the shader "ink" outward from the card's own position.
-
-### 3. `03. ./projects` — tailored live previews
-- **MI Buddy (RAG)**: a 13F filing wireframe continuously sheds chunks that
-  fly into an instanced vector-space cloud; every 7s a query pulse fires from
-  the answer panel, nearest embeddings flare, retrieval beams return, and the
-  answer rows stream in.
-- **High-Throughput Routing**: ingress lanes converge on a rotating router
-  core and fan out to color-coded sinks, with a live "routed today" odometer
-  ticking at the real 40–100M points/day rate (~460–1,150 events/sec).
-
-### 4. `04. ./log` — metrics-first experience timeline
-- The ISS entry leads with a terminal-green counter that rips from `0%` to
-  `+75%` the moment it enters the viewport — the Simfund (MarketPulse) query
-  performance win is the first thing read.
-- Background SVG motifs are accurate systems sketches: Go scheduler with
-  buffered channels and worker fan-out, JVM generational GC (eden/survivor/
-  tenured + STW budget), and a Python ETL DAG (`logArt.tsx`).
-
-### 5. Command palette & interactive API mocking
-- `⌘K` opens a cmdk palette with executable dummy processes:
-  `> start mi_buddy`, `> optimize_queries`, `> router_core --stress`,
-  `> inject --ripple`, `sudo hire-me` — each plays a toast sequence and
-  drives the page (scroll, ripple) like a real shell.
-- CV is one click from the hero and nav (`↓ download cv.pdf`); the palette adds
-  `fetch cv --pdf`, `fetch cv --view` (LaTeX pager), and `fetch cv --download`
-  (`.tex` source). Both files live in `public/cv/`.
-- The contact section hosts a functional terminal: type a natural-language
-  query, it pings the mocked MI Buddy backend (`mockBackend.ts`) and streams
-  the JSON response token-by-token with status line + latency.
-
-### 6. Edge cases & identity
-- **Dead links** never render as buttons — `GhostLink.tsx` prints them as raw
-  terminal text (`[STATUS: OFFLINE]`, `[WIP]`) using the `--ghost` CSS token.
-- **Mobile fallback**: ≤767px the WebGL `NeuralCanvas` is disabled and the 2D
-  `FlowField` runs at 2.3× density / 1.9× speed; the global pipeline drops to
-  ~⅓ particle count and clamped DPR.
-- **Identity injection**: everything (sections, palette, CV, mock backend)
-  reads from `src/data/profile.ts` — Nikhil Gangaramani, Mumbai IN.
-- `prefers-reduced-motion` disables the boot sequence, counters, streaming,
-  and shader motion.
-
-## Layout
+## Structure
 
 ```
 src/
-  data/profile.ts          # single source of identity + content
-  lib/                     # hooks, ripple bus, KTX2 policy, mock backend
+  data/
+    site.ts          # identity, JD pillars (skills), about copy
+    projects.ts      # featured projects + case-study content (§4 template)
+  layouts/Base.astro # <head>, OG/Twitter meta, header/footer/palette
   components/
-    three/                 # PipelineCanvas, sims, shaders, SimCanvas gate
-    hero/                  # Hero, FlowField (2D), NeuralCanvas (raw WebGL)
-    sections/              # whoami, stack, projects, log (+SVG art), contact
-    CommandPalette.tsx     # cmdk shell
-    CvModal.tsx            # LaTeX CV pager
-public/cv/                 # nikhil_gangaramani_cv.tex
+    Header, Footer
+    CommandPalette.astro  # the one signature element — terminal-style index
+    ProjectCard.astro
+    Diagram.astro    # in-style SVG architecture diagrams (no Mermaid)
+  pages/
+    index.astro          # hero · work · skills · about · contact
+    projects/[slug].astro # one case study per project
+public/
+  cv/  favicon.svg  og.png  robots.txt
 ```
 
-> Dates/links in `profile.ts` marked `null` or approximate are placeholders —
-> edit that one file to update the whole site.
+## Editing content
+
+Everything renders from `src/data/`. To add a project, append to
+`projects.ts`; it appears in the grid, the palette, and gets a case-study
+route automatically.
+
+## Honesty guardrails (non-negotiable, per the plan §8)
+
+- **No placeholder metrics, no "coming soon".** A project exists in
+  `projects.ts` only when it is real. P1 (Fixed Income Research Copilot),
+  P3 (FinTune), and P4 (Curve & Spread Lab) are deliberately **absent** until
+  they ship with real content.
+- Case-study sections (`evaluation`, `didntWork`) render only when populated —
+  a page that jumps §3 → §6 is intended, not a bug.
+- Status labels ("public mirror in preparation") are momentum, not weakness.
+
+## Open `[NEEDS-INPUT]` items (blocking, from the plan §7)
+
+Grep `TODO(nikhil)` for these in-context. Summary:
+
+| Item | Where | Blocks |
+|---|---|---|
+| Production domain | `astro.config.mjs` `SITE_URL` | sitemap, absolute OG URLs |
+| Résumé PDF (real) | `public/cv/` + `site.resumePath` | the current PDF is drafted from prior approved content — **review before applying** |
+| LinkedIn URL | `site.ts` `linkedin` | footer/contact link (hidden until set) |
+| P2 repo URL + sample output | `projects.ts` nse-screener `links`/`evaluation` | screener repo link + evaluation section |
+| Real metrics (P1 RAGAS, P3 F1, MI Buddy eval) | `projects.ts` | those `evaluation` sections stay hidden until provided |
+| Deploy target | hosting | site is unhosted; no deploy config committed |
+
+## Content provenance note
+
+The MI Buddy, routing, and ISS/Simfund content carries over from the prior
+site per Nikhil's instruction that it is real work. The dates, the +75% figure,
+and the drafted CV originated in an earlier build and **must survive an
+interview drill-down** — confirm or correct before the application goes out.

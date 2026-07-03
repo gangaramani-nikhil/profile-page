@@ -1,0 +1,184 @@
+---
+/**
+ * Case-study pages — one route per project, all following the §4 template.
+ * Sections render only when real content exists for them; nothing placeholder
+ * ever reaches the page.
+ */
+import Base from '../../layouts/Base.astro';
+import Diagram from '../../components/Diagram.astro';
+import { projects } from '../../data/projects';
+import { pillars, site } from '../../data/site';
+
+export function getStaticPaths() {
+  return projects.map((project) => ({
+    params: { slug: project.slug },
+    props: { project },
+  }));
+}
+
+const { project } = Astro.props;
+const pillarLabel = (id: string) => pillars.find((p) => p.id === id)?.label ?? id;
+---
+
+<Base title={`${project.title} — ${site.name}`} description={project.oneLiner}>
+  <article class="shell study">
+    <header>
+      <p class="kicker"><a href="/#work">← Work</a></p>
+      <h1>{project.title}</h1>
+      <p class="one-liner">{project.oneLiner}</p>
+      {project.status && <p class="status mono">{project.status}</p>}
+      <p class="tags">
+        {project.pillars.map((p) => <span class="chip chip--pillar">{pillarLabel(p)}</span>)}
+      </p>
+      <p class="tags">
+        {project.stack.map((s) => <span class="chip">{s}</span>)}
+      </p>
+      {project.links.length > 0 && (
+        <p class="links mono">
+          {project.links.map((l) => (
+            <a href={l.href} target="_blank" rel="noreferrer">
+              {l.label} ↗
+            </a>
+          ))}
+        </p>
+      )}
+    </header>
+
+    <section>
+      <h2><span class="kicker">§1</span> The problem</h2>
+      {project.problem.map((p) => <p>{p}</p>)}
+    </section>
+
+    <section>
+      <h2><span class="kicker">§2</span> Architecture</h2>
+      <Diagram kind={project.diagram}>fig. 1 — {project.title.toLowerCase()}: data flow</Diagram>
+      {project.architectureProse.map((p) => <p>{p}</p>)}
+    </section>
+
+    <section>
+      <h2><span class="kicker">§3</span> Key decisions &amp; tradeoffs</h2>
+      <dl class="decisions">
+        {project.decisions.map((d) => (
+          <>
+            <dt>{d.title}</dt>
+            <dd>{d.body}</dd>
+          </>
+        ))}
+      </dl>
+    </section>
+
+    {project.evaluation && (
+      <section>
+        <h2><span class="kicker">§4</span> Evaluation &amp; results</h2>
+        {project.evaluation.map((p) => <p>{p}</p>)}
+      </section>
+    )}
+
+    {project.didntWork && (
+      <section>
+        <h2><span class="kicker">§5</span> What didn't work</h2>
+        {project.didntWork.map((p) => <p>{p}</p>)}
+      </section>
+    )}
+
+    {project.next && (
+      <section>
+        <h2><span class="kicker">§6</span> What I'd build next</h2>
+        <ul class="next">
+          {project.next.map((n) => <li>{n}</li>)}
+        </ul>
+      </section>
+    )}
+
+    <footer class="study-foot">
+      <a href="/#work">← Back to work</a>
+      <a href={`mailto:${site.email}`} class="mono">Ask me about this build</a>
+    </footer>
+  </article>
+</Base>
+
+<style>
+  .study {
+    max-width: 760px;
+    padding-top: 4rem;
+  }
+  header {
+    padding-bottom: 2.5rem;
+    border-bottom: 1px solid var(--hairline);
+  }
+  header h1 {
+    font-size: clamp(1.6rem, 4vw, 2.2rem);
+    margin: 0.75rem 0 1rem;
+  }
+  .one-liner {
+    font-size: 1.05rem;
+    color: var(--ink-2);
+    margin-bottom: 1rem;
+  }
+  .status {
+    display: inline-block;
+    font-size: 0.7rem;
+    color: var(--ink-2);
+    background: var(--wash);
+    border: 1px solid var(--hairline);
+    padding: 0.15rem 0.55rem;
+    border-radius: 2px;
+    margin-bottom: 1rem;
+  }
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-bottom: 0.5rem;
+  }
+  .links {
+    margin-top: 1rem;
+    display: flex;
+    gap: 1.5rem;
+    font-size: 0.8rem;
+  }
+  section {
+    padding: 2.25rem 0 0.5rem;
+  }
+  section h2 {
+    font-size: 1.05rem;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+  }
+  section p {
+    margin-bottom: 1rem;
+    color: var(--ink);
+  }
+  .decisions dt {
+    font-weight: 600;
+    margin-top: 1.1rem;
+  }
+  .decisions dd {
+    color: var(--ink-2);
+    margin-top: 0.3rem;
+  }
+  .next {
+    list-style: none;
+  }
+  .next li {
+    padding: 0.35rem 0 0.35rem 1.25rem;
+    position: relative;
+    color: var(--ink-2);
+  }
+  .next li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+  }
+  .study-foot {
+    margin-top: 3rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--hairline);
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+  }
+</style>

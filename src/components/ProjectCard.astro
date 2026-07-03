@@ -1,0 +1,85 @@
+---
+import type { Project } from '../data/projects';
+import { pillars } from '../data/site';
+
+interface Props {
+  project: Project;
+  index: number;
+}
+
+const { project, index } = Astro.props;
+const pillarLabel = (id: string) => pillars.find((p) => p.id === id)?.label ?? id;
+const num = String(index + 1).padStart(2, '0');
+---
+
+<article class="card">
+  <div class="meta">
+    <span class="kicker">{num}</span>
+    {project.status && <span class="status mono">{project.status}</span>}
+  </div>
+  <h3><a href={`/projects/${project.slug}`}>{project.title}</a></h3>
+  <p class="one-liner">{project.oneLiner}</p>
+  <p class="tags">
+    {project.pillars.map((p) => <span class="chip chip--pillar">{pillarLabel(p)}</span>)}
+  </p>
+  <p class="tags">
+    {project.stack.map((s) => <span class="chip">{s}</span>)}
+  </p>
+  <p class="links mono">
+    <a href={`/projects/${project.slug}`}>Case study →</a>
+    {project.links.map((l) => (
+      <a href={l.href} target="_blank" rel="noreferrer">
+        {l.label} ↗
+      </a>
+    ))}
+  </p>
+</article>
+
+<style>
+  .card {
+    border-top: 1px solid var(--hairline-strong);
+    padding: 1.75rem 0 2.25rem;
+  }
+  .meta {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    margin-bottom: 0.6rem;
+  }
+  .status {
+    font-size: 0.68rem;
+    color: var(--ink-2);
+    background: var(--wash);
+    border: 1px solid var(--hairline);
+    padding: 0.1rem 0.5rem;
+    border-radius: 2px;
+  }
+  h3 {
+    font-size: 1.15rem;
+    margin-bottom: 0.5rem;
+  }
+  h3 a {
+    color: var(--ink);
+  }
+  h3 a:hover {
+    color: var(--accent);
+  }
+  .one-liner {
+    max-width: var(--prose);
+    color: var(--ink-2);
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
+  }
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-bottom: 0.5rem;
+  }
+  .links {
+    margin-top: 1rem;
+    display: flex;
+    gap: 1.5rem;
+    font-size: 0.8rem;
+  }
+</style>

@@ -1,0 +1,154 @@
+---
+/**
+ * Case-study architecture diagrams, drawn in the site's own style (spec §2:
+ * "not a default Mermaid dump"): hairline boxes, mono labels, single accent.
+ */
+interface Props {
+  kind: 'screener' | 'mibuddy' | 'routing';
+}
+const { kind } = Astro.props;
+---
+
+<figure class="diagram">
+  {kind === 'screener' && (
+    <svg viewBox="0 0 760 240" role="img" aria-label="Data flow: market APIs feed a nightly pipeline, screening functions, and an MCP server queried by LLM clients">
+      <defs>
+        <marker id="a1" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+          <path d="M0 0 L8 4 L0 8" fill="none" stroke="var(--ink-3)" />
+        </marker>
+      </defs>
+      <g fill="none" stroke="var(--hairline-strong)">
+        <rect x="20" y="36" width="130" height="44" />
+        <rect x="20" y="120" width="130" height="44" />
+        <rect x="210" y="76" width="140" height="48" />
+        <rect x="410" y="76" width="150" height="48" />
+        <rect x="620" y="30" width="120" height="44" stroke="var(--accent)" />
+        <rect x="620" y="140" width="120" height="44" stroke-dasharray="4 3" />
+      </g>
+      <g stroke="var(--ink-3)" fill="none">
+        <path d="M150 58 C 180 58 180 88 208 92" marker-end="url(#a1)" />
+        <path d="M150 142 C 180 142 180 112 208 108" marker-end="url(#a1)" />
+        <path d="M350 100 H 408" marker-end="url(#a1)" />
+        <path d="M560 92 C 590 88 590 56 618 52" marker-end="url(#a1)" />
+        <path d="M618 158 C 590 156 590 108 562 104" marker-end="url(#a1)" stroke-dasharray="4 3" />
+      </g>
+      <g class="lbl" fill="var(--ink-2)">
+        <text x="85" y="61" text-anchor="middle">INDmoney API</text>
+        <text x="85" y="145" text-anchor="middle">yfinance</text>
+        <text x="280" y="96" text-anchor="middle">nightly fetch</text>
+        <text x="280" y="112" text-anchor="middle">+ transforms</text>
+        <text x="485" y="96" text-anchor="middle">screening fns</text>
+        <text x="485" y="112" text-anchor="middle">(unit-tested)</text>
+        <text x="680" y="55" text-anchor="middle" fill="var(--accent-ink)">MCP server</text>
+        <text x="680" y="165" text-anchor="middle">LLM client</text>
+        <text x="680" y="180" text-anchor="middle">(tool calls)</text>
+        <text x="280" y="146" text-anchor="middle" fill="var(--ink-3)">476 NSE equities · EOD</text>
+      </g>
+    </svg>
+  )}
+  {kind === 'mibuddy' && (
+    <svg viewBox="0 0 760 240" role="img" aria-label="RAG pipeline: EDGAR filings are parsed, chunked, embedded into pgvector, retrieved and reranked, then answered with citations">
+      <defs>
+        <marker id="a2" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+          <path d="M0 0 L8 4 L0 8" fill="none" stroke="var(--ink-3)" />
+        </marker>
+      </defs>
+      <g fill="none" stroke="var(--hairline-strong)">
+        <rect x="20" y="80" width="110" height="48" />
+        <rect x="185" y="80" width="120" height="48" />
+        <rect x="360" y="80" width="110" height="48" stroke="var(--accent)" />
+        <rect x="525" y="80" width="110" height="48" />
+        <rect x="525" y="170" width="110" height="40" stroke-dasharray="4 3" />
+        <rect x="360" y="16" width="110" height="40" stroke-dasharray="4 3" />
+      </g>
+      <g stroke="var(--ink-3)" fill="none">
+        <path d="M130 104 H 183" marker-end="url(#a2)" />
+        <path d="M305 104 H 358" marker-end="url(#a2)" />
+        <path d="M470 104 H 523" marker-end="url(#a2)" />
+        <path d="M580 128 V 168" marker-end="url(#a2)" />
+        <path d="M415 78 V 58" marker-end="url(#a2)" stroke-dasharray="4 3" />
+      </g>
+      <g class="lbl" fill="var(--ink-2)">
+        <text x="75" y="100" text-anchor="middle">EDGAR</text>
+        <text x="75" y="116" text-anchor="middle">13F filings</text>
+        <text x="245" y="100" text-anchor="middle">parse + chunk</text>
+        <text x="245" y="116" text-anchor="middle">(structural)</text>
+        <text x="415" y="100" text-anchor="middle" fill="var(--accent-ink)">pgvector</text>
+        <text x="415" y="116" text-anchor="middle" fill="var(--accent-ink)">embeddings</text>
+        <text x="580" y="100" text-anchor="middle">retrieve</text>
+        <text x="580" y="116" text-anchor="middle">+ rerank</text>
+        <text x="580" y="194" text-anchor="middle">cited answer ↩</text>
+        <text x="415" y="40" text-anchor="middle">SQL filters</text>
+      </g>
+    </svg>
+  )}
+  {kind === 'routing' && (
+    <svg viewBox="0 0 760 240" role="img" aria-label="Routing backbone: Kafka partitions feed Go worker pools and a rules router that fans out to idempotent sinks, with a dead-letter path">
+      <defs>
+        <marker id="a3" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+          <path d="M0 0 L8 4 L0 8" fill="none" stroke="var(--ink-3)" />
+        </marker>
+      </defs>
+      <g fill="none" stroke="var(--hairline-strong)">
+        <rect x="20" y="40" width="110" height="34" />
+        <rect x="20" y="98" width="110" height="34" />
+        <rect x="20" y="156" width="110" height="34" />
+        <rect x="200" y="80" width="130" height="66" />
+        <rect x="400" y="80" width="110" height="66" stroke="var(--accent)" />
+        <rect x="590" y="30" width="130" height="34" />
+        <rect x="590" y="88" width="130" height="34" />
+        <rect x="590" y="146" width="130" height="34" />
+        <rect x="400" y="196" width="110" height="34" stroke-dasharray="4 3" />
+      </g>
+      <g stroke="var(--ink-3)" fill="none">
+        <path d="M130 57 C 165 57 165 95 198 100" marker-end="url(#a3)" />
+        <path d="M130 115 H 198" marker-end="url(#a3)" />
+        <path d="M130 173 C 165 173 165 135 198 128" marker-end="url(#a3)" />
+        <path d="M330 113 H 398" marker-end="url(#a3)" />
+        <path d="M510 96 C 550 92 550 50 588 47" marker-end="url(#a3)" />
+        <path d="M510 108 H 588" marker-end="url(#a3)" />
+        <path d="M510 126 C 550 130 550 160 588 163" marker-end="url(#a3)" />
+        <path d="M455 146 V 194" marker-end="url(#a3)" stroke-dasharray="4 3" />
+      </g>
+      <g class="lbl" fill="var(--ink-2)">
+        <text x="75" y="61" text-anchor="middle">kafka p0</text>
+        <text x="75" y="119" text-anchor="middle">kafka p1</text>
+        <text x="75" y="177" text-anchor="middle">kafka pN</text>
+        <text x="265" y="108" text-anchor="middle">Go worker pools</text>
+        <text x="265" y="124" text-anchor="middle">(goroutines/chans)</text>
+        <text x="455" y="108" text-anchor="middle" fill="var(--accent-ink)">rules</text>
+        <text x="455" y="124" text-anchor="middle" fill="var(--accent-ink)">router</text>
+        <text x="655" y="51" text-anchor="middle">sink · analytics</text>
+        <text x="655" y="109" text-anchor="middle">sink · store</text>
+        <text x="655" y="167" text-anchor="middle">sink · cache</text>
+        <text x="455" y="217" text-anchor="middle">dead-letter + replay</text>
+      </g>
+    </svg>
+  )}
+  <figcaption class="mono dim">
+    <slot />
+  </figcaption>
+</figure>
+
+<style>
+  .diagram {
+    border: 1px solid var(--hairline);
+    border-radius: 3px;
+    padding: 1.25rem 1rem 0.75rem;
+    margin: 1.5rem 0;
+    background: var(--wash);
+  }
+  svg {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  .lbl text {
+    font-family: var(--mono);
+    font-size: 11px;
+  }
+  figcaption {
+    font-size: 0.7rem;
+    padding: 0.6rem 0.25rem 0.25rem;
+  }
+</style>

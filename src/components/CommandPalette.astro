@@ -1,0 +1,200 @@
+---
+/**
+ * The site's one signature element (spec §5): a terminal-style index.
+ * Dependency-free — a <dialog> with a filterable, keyboard-navigable list.
+ * Opens on ⌘K / Ctrl+K or the header button.
+ */
+import { site } from '../data/site';
+import { projects } from '../data/projects';
+
+const entries = [
+  { group: 'Sections', label: 'Work', hint: '/#work', href: '/#work' },
+  { group: 'Sections', label: 'Skills', hint: '/#skills', href: '/#skills' },
+  { group: 'Sections', label: 'About', hint: '/#about', href: '/#about' },
+  { group: 'Sections', label: 'Contact', hint: '/#contact', href: '/#contact' },
+  ...projects.map((p) => ({
+    group: 'Case studies',
+    label: p.title,
+    hint: `/projects/${p.slug}`,
+    href: `/projects/${p.slug}`,
+  })),
+  { group: 'Actions', label: 'Download résumé (PDF)', hint: 'cv.pdf', href: site.resumePath },
+  { group: 'Actions', label: 'Email Nikhil', hint: site.email, href: `mailto:${site.email}` },
+  { group: 'Actions', label: 'Open GitHub', hint: 'github.com', href: site.github },
+];
+---
+
+<dialog id="palette" aria-label="Site index">
+  <div class="frame">
+    <input
+      type="text"
+      id="palette-input"
+      placeholder="Type to filter the index…"
+      autocomplete="off"
+      spellcheck="false"
+      aria-label="Filter site index"
+    />
+    <ul id="palette-list" role="listbox">
+      {entries.map((e) => (
+        <li role="option" data-href={e.href} data-label={`${e.group} ${e.label}`.toLowerCase()}>
+          <span class="group">{e.group}</span>
+          <span class="label">{e.label}</span>
+          <span class="hint">{e.hint}</span>
+        </li>
+      ))}
+    </ul>
+    <p class="foot">↑↓ navigate · ↵ open · esc close</p>
+  </div>
+</dialog>
+
+<style>
+  dialog {
+    width: min(560px, calc(100vw - 2rem));
+    border: 1px solid var(--hairline-strong);
+    border-radius: 3px;
+    padding: 0;
+    margin: 14vh auto auto;
+    box-shadow: 0 16px 48px rgba(23, 33, 43, 0.16);
+  }
+  dialog::backdrop {
+    background: rgba(23, 33, 43, 0.28);
+  }
+  #palette-input {
+    width: 100%;
+    border: 0;
+    border-bottom: 1px solid var(--hairline);
+    padding: 0.9rem 1rem;
+    font-family: var(--mono);
+    font-size: 0.85rem;
+    color: var(--ink);
+    outline: none;
+  }
+  #palette-input::placeholder {
+    color: var(--ink-3);
+  }
+  ul {
+    list-style: none;
+    max-height: 46vh;
+    overflow-y: auto;
+    padding: 0.35rem;
+  }
+  li {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    padding: 0.5rem 0.65rem;
+    font-size: 0.85rem;
+    border-radius: 2px;
+    cursor: pointer;
+  }
+  li[aria-selected='true'] {
+    background: rgba(31, 78, 140, 0.07);
+  }
+  li[hidden] {
+    display: none;
+  }
+  .group {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-3);
+    width: 6.5rem;
+    flex-shrink: 0;
+  }
+  .label {
+    color: var(--ink);
+  }
+  .hint {
+    margin-left: auto;
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    color: var(--ink-3);
+  }
+  .foot {
+    border-top: 1px solid var(--hairline);
+    padding: 0.5rem 1rem;
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--ink-3);
+  }
+</style>
+
+<script>
+  const dialog = document.getElementById('palette') as HTMLDialogElement;
+  const input = document.getElementById('palette-input') as HTMLInputElement;
+  const list = document.getElementById('palette-list') as HTMLUListElement;
+  const items = () =>
+    [...list.querySelectorAll<HTMLLIElement>('li:not([hidden])')];
+
+  let cursor = 0;
+
+  function select(i: number) {
+    const vis = items();
+    if (!vis.length) return;
+    cursor = ((i % vis.length) + vis.length) % vis.length;
+    list.querySelectorAll('li').forEach((el) => el.removeAttribute('aria-selected'));
+    vis[cursor].setAttribute('aria-selected', 'true');
+    vis[cursor].scrollIntoView({ block: 'nearest' });
+  }
+
+  function open() {
+    dialog.showModal();
+    input.value = '';
+    filter('');
+    input.focus();
+  }
+
+  function go(li: HTMLLIElement | undefined) {
+    const href = li?.dataset.href;
+    if (!href) return;
+    dialog.close();
+    if (href.startsWith('mailto:') || href.startsWith('http') || href.endsWith('.pdf')) {
+      window.open(href, href.startsWith('mailto:') ? '_self' : '_blank');
+    } else {
+      window.location.href = href;
+    }
+  }
+
+  function filter(q: string) {
+    const needle = q.trim().toLowerCase();
+    list.querySelectorAll<HTMLLIElement>('li').forEach((li) => {
+      li.hidden = needle !== '' && !li.dataset.label!.includes(needle);
+    });
+    select(0);
+  }
+
+  window.addEventListener('keydown', (e) => {
+    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+      e.preventDefault();
+      dialog.open ? dialog.close() : open();
+    }
+  });
+
+  document.querySelectorAll('[data-palette-open]').forEach((btn) =>
+    btn.addEventListener('click', open),
+  );
+
+  input.addEventListener('input', () => filter(input.value));
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      select(cursor + 1);
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      select(cursor - 1);
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      go(items()[cursor]);
+    }
+  });
+
+  list.addEventListener('click', (e) => {
+    const li = (e.target as HTMLElement).closest('li');
+    if (li) go(li as HTMLLIElement);
+  });
+
+  dialog.addEventListener('click', (e) => {
+    if (e.target === dialog) dialog.close();
+  });
+</script>

@@ -1,0 +1,206 @@
+/*
+ * Design tokens — institutional, data-forward (spec §5).
+ * Reads like a well-set research note: paper white, ink text, one blue,
+ * hairline rules, mono for data and labels. The single signature element is
+ * the ⌘K terminal-style index; everything else stays quiet.
+ */
+:root {
+  --paper: #ffffff;
+  --ink: #17212b;
+  --ink-2: #55616d;
+  --ink-3: #8a949e;
+  --hairline: #e3e7eb;
+  --hairline-strong: #c9d0d7;
+  --accent: #1f4e8c;
+  --accent-ink: #163763;
+  --wash: #f6f8fa;
+
+  --sans: 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+
+  --shell: 1080px;
+  --prose: 68ch;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+body {
+  font-family: var(--sans);
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--ink);
+  background: var(--paper);
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: rgba(31, 78, 140, 0.14);
+}
+
+/* Visible keyboard focus — quality floor requirement. */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 1px;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+h1,
+h2,
+h3 {
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+}
+
+.shell {
+  max-width: var(--shell);
+  margin: 0 auto;
+  padding: 0 1.25rem;
+}
+
+@media (min-width: 768px) {
+  .shell {
+    padding: 0 2rem;
+  }
+}
+
+/* Mono section label, e.g. "01 — Work". The quiet nod to a research desk. */
+.kicker {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.rule {
+  border: 0;
+  border-top: 1px solid var(--hairline);
+}
+
+.section {
+  padding: 4.5rem 0;
+  border-top: 1px solid var(--hairline);
+}
+
+.section-head {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  margin-bottom: 2.25rem;
+}
+
+.section-head h2 {
+  font-size: 1.35rem;
+}
+
+/* Chips: stack items, pillar tags */
+.chip {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--ink-2);
+  border: 1px solid var(--hairline-strong);
+  padding: 0.15rem 0.55rem;
+  border-radius: 2px;
+  white-space: nowrap;
+}
+
+.chip--pillar {
+  color: var(--accent-ink);
+  border-color: rgba(31, 78, 140, 0.35);
+  background: rgba(31, 78, 140, 0.05);
+}
+
+/* Buttons */
+.btn {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  font-weight: 500;
+  padding: 0.6rem 1.1rem;
+  border-radius: 2px;
+  border: 1px solid var(--accent);
+  transition: background-color 120ms ease, color 120ms ease;
+}
+
+.btn--primary {
+  background: var(--accent);
+  color: #fff;
+}
+
+.btn--primary:hover {
+  background: var(--accent-ink);
+  text-decoration: none;
+}
+
+.btn--ghost {
+  color: var(--accent-ink);
+  border-color: var(--hairline-strong);
+}
+
+.btn--ghost:hover {
+  border-color: var(--accent);
+  text-decoration: none;
+}
+
+.mono {
+  font-family: var(--mono);
+}
+
+.dim {
+  color: var(--ink-2);
+}
+
+/* Data figures render with tabular numerals, like a printed table. */
+.figure {
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Skip link (a11y) */
+.skip-link {
+  position: absolute;
+  left: -999px;
+  top: 0;
+  background: var(--accent);
+  color: #fff;
+  padding: 0.5rem 1rem;
+  z-index: 100;
+}
+
+.skip-link:focus {
+  left: 0;
+}

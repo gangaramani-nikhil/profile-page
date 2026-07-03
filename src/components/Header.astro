@@ -1,0 +1,95 @@
+---
+import { site } from '../data/site';
+---
+
+<header class="site-header">
+  <div class="shell inner">
+    <a href="/" class="wordmark mono">N. Gangaramani</a>
+    <nav aria-label="Primary">
+      <a href="/#work">Work</a>
+      <a href="/#skills">Skills</a>
+      <a href="/#about">About</a>
+      <a href="/#contact">Contact</a>
+    </nav>
+    <div class="actions">
+      <a class="resume mono" href={site.resumePath} download>Résumé ↓</a>
+      <button class="palette-trigger mono" data-palette-open aria-label="Open site index">
+        Index <kbd>⌘K</kbd>
+      </button>
+    </div>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--hairline);
+  }
+  .inner {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    height: 3.5rem;
+  }
+  .wordmark {
+    font-weight: 500;
+    font-size: 0.85rem;
+    color: var(--ink);
+    letter-spacing: 0.02em;
+  }
+  nav {
+    display: none;
+    gap: 1.25rem;
+  }
+  nav a {
+    font-size: 0.85rem;
+    color: var(--ink-2);
+  }
+  nav a:hover {
+    color: var(--accent);
+    text-decoration: none;
+  }
+  .actions {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .resume {
+    font-size: 0.75rem;
+    color: var(--accent-ink);
+    border: 1px solid var(--hairline-strong);
+    padding: 0.3rem 0.65rem;
+    border-radius: 2px;
+  }
+  .resume:hover {
+    border-color: var(--accent);
+    text-decoration: none;
+  }
+  .palette-trigger {
+    font-size: 0.75rem;
+    color: var(--ink-2);
+    background: none;
+    border: 1px solid var(--hairline);
+    border-radius: 2px;
+    padding: 0.3rem 0.65rem;
+    cursor: pointer;
+  }
+  .palette-trigger:hover {
+    border-color: var(--hairline-strong);
+    color: var(--ink);
+  }
+  .palette-trigger kbd {
+    font-family: inherit;
+    color: var(--ink-3);
+  }
+  @media (min-width: 768px) {
+    nav {
+      display: flex;
+    }
+  }
+</style>
